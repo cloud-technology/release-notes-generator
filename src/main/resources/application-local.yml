@@ -1,0 +1,13 @@
+releasenotes:
+  gitlab:
+    access-token: ${gitlabAccessToken}
+    name: ${projectName}
+    project-id: ${projectID}
+    milestoneTitle: ${milestoneTitle}
+    path-to-generate-file: ${pathToGenerateFile}
+
+
+logging:
+  level:
+    root: info
+    com.ct.rng: debug

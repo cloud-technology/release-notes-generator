@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: release-notes-generator
+  main:
+    web-application-type: none
+
+logging:
+  level:
+    root: info
+    com.ct.rng: info

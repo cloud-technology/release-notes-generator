@@ -50,7 +50,7 @@ publishing {
             url = uri("https://maven.pkg.github.com/cloud-technology/release-notes-generator")
             credentials {
                 username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_ACTOR")
-                password = project.findProperty("gpr.key") ?: System.getenv("GITHUB_TOKEN")
+                password = project.findProperty("gpr.key") ?: System.getenv("secrets.GITHUB_TOKEN")
             }
         }
     }

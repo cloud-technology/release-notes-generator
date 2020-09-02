@@ -23,6 +23,6 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Build with Gradle
-      run: ./gradlew build bootBuildImage --imageName=docker.pkg.github.com/${{ GITHUB_REPOSITORY }}/release-notes-generator:0.0.1
+      run: ./gradlew build bootBuildImage --imageName=docker.pkg.github.com/${{ github.repository }}/release-notes-generator:0.0.1
     - name: Login Docker
       run: docker login docker.pkg.github.com --username samzhu --password ${{ github.token }}

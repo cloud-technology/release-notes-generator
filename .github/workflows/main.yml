@@ -26,3 +26,5 @@ jobs:
       run: ./gradlew build bootBuildImage --imageName=docker.pkg.github.com/${{ github.repository }}:${{ github.run.id }}
     - name: Login Docker
       run: docker login docker.pkg.github.com --username samzhu --password ${{ github.token }}
+    - name: Push Docker
+      run: docker push docker.pkg.github.com/${{ github.repository }}:${{ github.run.id }}

@@ -63,7 +63,7 @@ public class ReleaseNotesSections {
 				collated.get(section).add(issue);
 			}
 		}
-		// log.debug("collate={}", collated);
+		log.debug("collate={}", collated);
 		return collated;
 	}
 

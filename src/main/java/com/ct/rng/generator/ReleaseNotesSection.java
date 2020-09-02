@@ -2,18 +2,10 @@ package com.ct.rng.generator;
 
 import java.util.Arrays;
 import java.util.List;
-
 import com.ct.rng.properties.gitlab.issues.Issue;
-
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
-import lombok.Data;
-import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
-
-
-@Slf4j
 public class ReleaseNotesSection {
 
     private final String title;

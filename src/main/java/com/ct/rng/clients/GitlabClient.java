@@ -27,5 +27,6 @@ public interface GitlabClient {
                         @PathVariable("milestoneNumber") Integer milestoneNumber);
 
         @RequestMapping(method = RequestMethod.POST, path = "/projects/{projectid}/releases")
-        String createRelease(@RequestHeader("Authorization") String authorization, ReleaseCreateDto releaseCreateDto);
+        String createRelease(@RequestHeader("Authorization") String authorization,
+                        @PathVariable("projectid") Integer projectid, ReleaseCreateDto releaseCreateDto);
 }

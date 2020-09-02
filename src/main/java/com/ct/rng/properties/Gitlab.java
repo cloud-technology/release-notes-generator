@@ -1,7 +1,5 @@
 package com.ct.rng.properties;
 
-import java.util.List;
-
 import lombok.Data;
 
 @Data

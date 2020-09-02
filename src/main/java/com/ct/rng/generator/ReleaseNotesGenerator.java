@@ -104,7 +104,8 @@ public class ReleaseNotesGenerator {
     private String getFormattedIssue(Issue issue) {
         String title = issue.getTitle();
         // title = ghUserMentionPattern.matcher(title).replaceAll("$1`$2`");
-        return "- " + this.getFlowInfo(issue) + title + " " + getLinkToIssue(issue) + " " + this.getFlowInfo(issue) + "\n";
+        return "- " + this.getFlowInfo(issue) + title + " " + getLinkToIssue(issue) + " " + this.getFlowInfo(issue)
+                + "\n";
     }
 
     private String getFlowInfo(Issue issue) {
@@ -129,7 +130,7 @@ public class ReleaseNotesGenerator {
         FileCopyUtils.copy(content, new FileWriter(new File(path)));
     }
 
-    private void createRelease(String content){
+    private void createRelease(String content) {
         Gitlab gitlab = applicationProperties.getGitlab();
         ReleaseCreateDto releaseCreateDto = new ReleaseCreateDto();
         releaseCreateDto.setName(gitlab.getMilestoneTitle());
@@ -137,7 +138,8 @@ public class ReleaseNotesGenerator {
         releaseCreateDto.setDescription(content);
         releaseCreateDto.setRef("main");
         releaseCreateDto.setMilestones(Arrays.asList(gitlab.getMilestoneTitle()));
-        String rs = gitlabClient.createRelease(String.format("Bearer %s", gitlab.getAccessToken()), releaseCreateDto);
+        String rs = gitlabClient.createRelease(String.format("Bearer %s", gitlab.getAccessToken()),
+                gitlab.getProjectId(), releaseCreateDto);
         log.debug("createRelease={}", rs);
     }
 

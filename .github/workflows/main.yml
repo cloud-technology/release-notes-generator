@@ -25,7 +25,7 @@ jobs:
     - name: Build with Gradle
       run: ./gradlew build publish
     - name: Login Docker
-      run: docker login docker.pkg.github.com --username samzhu --password ${{ github.token }}
+      run: docker login docker.pkg.github.com --username cloud-technology --password ${{ github.token }}
     - name: Build Docker Image
       run: ./gradlew bootBuildImage --imageName=docker.pkg.github.com/$GITHUB_REPOSITORY/release-notes-generator:$GITHUB_RUN_NUMBER
     - name: Push Docker

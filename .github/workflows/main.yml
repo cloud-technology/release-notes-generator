@@ -24,8 +24,8 @@ jobs:
       run: chmod +x gradlew
     - name: Build with Gradle
       env:
-        USERNAME: ${{ secrets.USERNAME }}
-        TOKEN: ${{ secrets.TOKEN }}
+        USERNAME: $GITHUB_ACTOR
+        TOKEN: $GITHUB_TOKEN
       run: ./gradlew build publish
     - name: Login Docker
       run: docker login docker.pkg.github.com --username cloud-technology --password ${{ github.token }}

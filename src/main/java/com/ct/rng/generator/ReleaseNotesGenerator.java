@@ -3,6 +3,7 @@ package com.ct.rng.generator;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -13,6 +14,7 @@ import com.ct.rng.clients.MilestonesQueryParams;
 import com.ct.rng.properties.ApplicationProperties;
 import com.ct.rng.properties.Gitlab;
 import com.ct.rng.properties.gitlab.Milestone;
+import com.ct.rng.properties.gitlab.ReleaseCreateDto;
 import com.ct.rng.properties.gitlab.issues.Issue;
 import com.ct.rng.properties.gitlab.issues.User;
 
@@ -45,6 +47,7 @@ public class ReleaseNotesGenerator {
         String content = generateContent(issues);
         // log.debug("content={}", content);
         writeContentToFile(content, path);
+        this.createRelease(content);
     }
 
     private int getMilestoneNumber(String milestoneTitle) {
@@ -124,6 +127,18 @@ public class ReleaseNotesGenerator {
 
     private void writeContentToFile(String content, String path) throws IOException {
         FileCopyUtils.copy(content, new FileWriter(new File(path)));
+    }
+
+    private void createRelease(String content){
+        Gitlab gitlab = applicationProperties.getGitlab();
+        ReleaseCreateDto releaseCreateDto = new ReleaseCreateDto();
+        releaseCreateDto.setName(gitlab.getMilestoneTitle());
+        releaseCreateDto.setTagName(gitlab.getMilestoneTitle());
+        releaseCreateDto.setDescription(content);
+        releaseCreateDto.setRef("main");
+        releaseCreateDto.setMilestones(Arrays.asList(gitlab.getMilestoneTitle()));
+        String rs = gitlabClient.createRelease(String.format("Bearer %s", gitlab.getAccessToken()), releaseCreateDto);
+        log.debug("createRelease={}", rs);
     }
 
 }

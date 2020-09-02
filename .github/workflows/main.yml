@@ -24,11 +24,11 @@ jobs:
       run: chmod +x gradlew
     - name: Build with Gradle
       env:
-        USERNAME: cloud-technology
+        USERNAME: $GITHUB_ACTOR
         TOKEN: ${{ github.token }}
       run: ./gradlew build publish
     - name: Login Docker
-      run: docker login docker.pkg.github.com --username cloud-technology --password ${{ github.token }}
+      run: docker login docker.pkg.github.com --username $GITHUB_ACTOR --password ${{ github.token }}
     - name: Build Docker Image
       run: ./gradlew bootBuildImage --imageName=docker.pkg.github.com/$GITHUB_REPOSITORY/release-notes-generator:$GITHUB_RUN_NUMBER
     - name: Push Docker

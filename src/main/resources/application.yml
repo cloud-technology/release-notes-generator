@@ -11,4 +11,4 @@ logging:
     com.ct.rng: info
 
 releasenotes:
-  regexExpression: '^\\d*[.]\\d*[.]\\d*[.]RELEASE$'
+  regexExpression: '^\d*[.]\d*[.]\d*[.]RELEASE$'

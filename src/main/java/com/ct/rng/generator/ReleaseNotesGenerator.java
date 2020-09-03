@@ -41,7 +41,7 @@ public class ReleaseNotesGenerator {
 
     private ReleaseNotesSections sections;
 
-    public void generate(String milestone, String path) throws IOException {
+    public void generate(String milestone, String path) throws Exception {
         this.sections = new ReleaseNotesSections(applicationProperties);
 
         Gitlab gitlab = applicationProperties.getGitlab();
@@ -55,10 +55,10 @@ public class ReleaseNotesGenerator {
             if(matcher.matches()){
                 this.createRelease(content);
             }else{
-                log.error("Tag Name {} 不符合 {}", milestone, applicationProperties.getRegexExpression());
+                throw new IllegalAccessException(String.format("Tag Name %s 不符合 %s", milestone, applicationProperties.getRegexExpression()));
             }
         } else {
-            log.error("無法找到對應 Milestone name={}", milestone);
+            throw new IllegalAccessException(String.format("無法找到對應 Milestone name=%s", milestone));
         }
     }
 

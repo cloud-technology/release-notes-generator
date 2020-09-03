@@ -6,13 +6,16 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import com.ct.rng.clients.GitlabClient;
 import com.ct.rng.clients.MilestonesQueryParams;
 import com.ct.rng.properties.ApplicationProperties;
-import com.ct.rng.properties.Gitlab;
+import com.ct.rng.properties.gitlab.Gitlab;
 import com.ct.rng.properties.gitlab.Milestone;
 import com.ct.rng.properties.gitlab.ReleaseCreateDto;
 import com.ct.rng.properties.gitlab.issues.Issue;
@@ -42,15 +45,24 @@ public class ReleaseNotesGenerator {
         this.sections = new ReleaseNotesSections(applicationProperties);
 
         Gitlab gitlab = applicationProperties.getGitlab();
-        int milestoneNumber = this.getMilestoneNumber(gitlab.getMilestoneTitle());
-        List<Issue> issues = this.getIssuesForMilestone(milestoneNumber, null, null);
-        String content = generateContent(issues);
-        // log.debug("content={}", content);
-        writeContentToFile(content, path);
-        this.createRelease(content);
+        Optional<Integer> milestoneNumberOptional = this.getMilestoneNumber(gitlab.getMilestoneTitle());
+        if (milestoneNumberOptional.isPresent()) {
+            List<Issue> issues = this.getIssuesForMilestone(milestoneNumberOptional.get(), null, null);
+            String content = generateContent(issues);
+            writeContentToFile(content, path);
+            Pattern pattern = Pattern.compile(applicationProperties.getRegexExpression());
+            Matcher matcher = pattern.matcher(milestone);
+            if(matcher.matches()){
+                this.createRelease(content);
+            }else{
+                log.error("Tag Name {} 不符合 {}", milestone, applicationProperties.getRegexExpression());
+            }
+        } else {
+            log.error("無法找到對應 Milestone name={}", milestone);
+        }
     }
 
-    private int getMilestoneNumber(String milestoneTitle) {
+    private Optional<Integer> getMilestoneNumber(String milestoneTitle) {
         Gitlab gitlab = applicationProperties.getGitlab();
         Milestone milestone = null;
         MilestonesQueryParams params = new MilestonesQueryParams();
@@ -60,7 +72,7 @@ public class ReleaseNotesGenerator {
         if (milestones.size() == 1) {
             milestone = milestones.get(0);
         }
-        return milestone.getId();
+        return Optional.of(milestone.getId());
     }
 
     public List<Issue> getIssuesForMilestone(int milestoneNumber, String organization, String repository) {
@@ -104,8 +116,7 @@ public class ReleaseNotesGenerator {
     private String getFormattedIssue(Issue issue) {
         String title = issue.getTitle();
         // title = ghUserMentionPattern.matcher(title).replaceAll("$1`$2`");
-        return "- " + this.getFlowInfo(issue) + title + " " + getLinkToIssue(issue) + " " + this.getFlowInfo(issue)
-                + "\n";
+        return "- " + title + " " + getLinkToIssue(issue) + " " + this.getFlowInfo(issue) + "\n";
     }
 
     private String getFlowInfo(Issue issue) {
@@ -136,8 +147,9 @@ public class ReleaseNotesGenerator {
         releaseCreateDto.setName(gitlab.getMilestoneTitle());
         releaseCreateDto.setTagName(gitlab.getMilestoneTitle());
         releaseCreateDto.setDescription(content);
-        releaseCreateDto.setRef("main");
+        releaseCreateDto.setRef(gitlab.getMilestoneTitle());
         releaseCreateDto.setMilestones(Arrays.asList(gitlab.getMilestoneTitle()));
+        log.debug("releaseCreateDto={}", releaseCreateDto);
         String rs = gitlabClient.createRelease(String.format("Bearer %s", gitlab.getAccessToken()),
                 gitlab.getProjectId(), releaseCreateDto);
         log.debug("createRelease={}", rs);

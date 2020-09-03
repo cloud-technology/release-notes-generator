@@ -6,5 +6,9 @@ spring:
 
 logging:
   level:
-    root: info
+    root: debug
+    sun.net.www.protocol.http.HttpURLConnection: debug
     com.ct.rng: info
+
+releasenotes:
+  regexExpression: '^\\d*[.]\\d*[.]\\d*[.]RELEASE$'

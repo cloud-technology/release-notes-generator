@@ -1,10 +1,8 @@
 package com.ct.rng;
 
-import java.io.IOException;
-
 import com.ct.rng.generator.ReleaseNotesGenerator;
 import com.ct.rng.properties.ApplicationProperties;
-import com.ct.rng.properties.Gitlab;
+import com.ct.rng.properties.gitlab.Gitlab;
 
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
@@ -27,10 +25,12 @@ public class ApplicationLoader {
     public void applicationReady() {
         Gitlab gitlab = applicationProperties.getGitlab();
         try {
+            if(gitlab == null){
+                throw new IllegalAccessException("Gitlab 設定檔不存在");
+            }
             releaseNotesGenerator.generate(gitlab.getMilestoneTitle(), gitlab.getPathToGenerateFile());
-        } catch (IOException e) {
+        } catch (Exception e) {
             log.error("執行發生錯誤", e);
         }
-
     }
 }

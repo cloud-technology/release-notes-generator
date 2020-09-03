@@ -3,6 +3,8 @@ package com.ct.rng.properties;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ct.rng.properties.gitlab.Gitlab;
+
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
@@ -12,6 +14,8 @@ import lombok.Data;
 @Component
 @ConfigurationProperties(prefix = "releasenotes")
 public class ApplicationProperties {
+	private String regexExpression;
+	
     private Gitlab gitlab;
 
     private List<Section> sections = new ArrayList<>();

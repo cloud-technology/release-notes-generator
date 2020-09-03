@@ -1,4 +1,4 @@
-package com.ct.rng.properties;
+package com.ct.rng.properties.gitlab;
 
 import lombok.Data;
 

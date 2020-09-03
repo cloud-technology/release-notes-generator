@@ -6,8 +6,8 @@ spring:
 
 logging:
   level:
-    root: debug
-    sun.net.www.protocol.http.HttpURLConnection: debug
+    root: info
+    sun.net.www.protocol.http.HttpURLConnection: info
     com.ct.rng: info
 
 releasenotes:
